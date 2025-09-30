@@ -1,11 +1,27 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { IUser } from 'src/interfaces';
 
 @Injectable()
 export class UsersService {
   private users: IUser[] = [
-    { id: 1, name: 'Maria', email: 'maria@example.com', password: 'password1' },
-    { id: 2, name: 'juana', email: 'juana@example.com', password: 'password2' },
+    {
+      id: 1,
+      name: 'Maria',
+      email: 'maria@example.com',
+      password: 'password1',
+      age: 25,
+    },
+    {
+      id: 2,
+      name: 'juana',
+      email: 'juana@example.com',
+      password: 'password2',
+      age: 22,
+    },
   ];
 
   findAll(): IUser[] {
@@ -22,12 +38,17 @@ export class UsersService {
     const newId =
       this.users.length > 0 ? this.users[this.users.length - 1].id + 1 : 1;
 
-    const newUser: IUser = {
-      id: newId,
-      ...user,
-    };
-    this.users.push(newUser);
-    return newUser;
+    if (user.age && user.age >= 18) {
+      const newUser: IUser = {
+        id: newId,
+        ...user,
+      };
+
+      this.users.push(newUser);
+      return newUser;
+    }
+
+    throw new BadRequestException('El usuario debe ser mayor de edad');
   }
 
   update(id: number, newUser: Omit<IUser, 'id'>): IUser {
