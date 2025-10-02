@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { LoginDTO } from 'src/dto/login.dto';
@@ -8,9 +9,7 @@ export class AuthService {
 
   login(data: LoginDTO) {
     const users = this.usersService.findAll();
-    const user = users.find(
-      (user) => user.email === data.email && user.password === data.password,
-    );
+    const user = users.find((user) => user.email === data.email && user.password === data.password);
 
     if (!user) {
       throw new UnauthorizedException('Credenciales invalidas');

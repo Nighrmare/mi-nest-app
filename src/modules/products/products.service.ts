@@ -33,4 +33,28 @@ export class ProductsService {
     }
     return product;
   }
+
+  create(product: Omit<Product, 'id'>): Product {
+    const newProduct: Product = {
+      id: this.products.length + 1,
+      ...product,
+    };
+    this.products.push(newProduct);
+    return newProduct;
+  }
+
+  update(id: number, product: Partial<Product>): Product {
+    const existing = this.findOne(id);
+    const updated = { ...existing, ...product };
+    this.products = this.products.map((p) => (p.id === id ? updated : p));
+    return updated;
+  }
+
+  remove(id: number): void {
+    const index = this.products.findIndex((p) => p.id === id);
+    if (index === -1) {
+      throw new NotFoundException(`Producto con id ${id} no encontrado`);
+    }
+    this.products.splice(index, 1);
+  }
 }

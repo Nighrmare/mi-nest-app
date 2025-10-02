@@ -1,8 +1,5 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+/* eslint-disable prettier/prettier */
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { IUser } from 'src/interfaces';
 
 @Injectable()
@@ -36,20 +33,20 @@ export class UsersService {
 
   create(user: Omit<IUser, 'id'>): IUser {
     const newId =
-      this.users.length > 0 ? this.users[this.users.length - 1].id + 1 : 1;
-
-    if (user.age && user.age >= 18) {
-      const newUser: IUser = {
-        id: newId,
-        ...user,
-      };
-
-      this.users.push(newUser);
-      return newUser;
-    }
-
+      this.users.length > 0 ? this.users[this.users.length - 1].id + 1 
+      : 1;
+    if (user.age !== undefined && user.age < 18) {
     throw new BadRequestException('El usuario debe ser mayor de edad');
   }
+
+    const newUser: IUser = {
+    id: newId,
+    ...user,
+  };
+
+  this.users.push(newUser);
+  return newUser;
+}
 
   update(id: number, newUser: Omit<IUser, 'id'>): IUser {
     const user = this.findOne(id);
