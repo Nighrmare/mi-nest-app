@@ -1,0 +1,405 @@
+//  Registrar users con contraseña encriptada POST http://localhost:3000/auth/register
+{
+  "name": "pepita",
+  "email": "pepita@example.com",
+  "password": "password00",
+  "age": 25
+}
+Postman regresara 
+{
+    "message": "Usuario registrado con exito",
+    "user": {
+        "id": 8,
+        "email": "pepita@example.com"
+    }
+}
+
+//// otros casos al crear user 
+
+//Que pasa si se crea el user sin el name
+{
+    "name": "",
+    "email": "viviana@example.com",
+    "password": "1234567",
+    "age": 40
+}
+Postman regresara 
+{
+    "message": [
+        "name should not be empty"
+    ],
+    "error": "Bad Request",
+    "statusCode": 400
+}
+
+//Que pasa si se crea el user con el correo mal
+{
+    "name": "viviana",
+    "email": "vivianaexample.com",
+    "password": "1234567",
+    "age": 40
+}
+Postman regresara 
+{
+    "message": [
+        "email must be an email"
+    ],
+    "error": "Bad Request",
+    "statusCode": 400
+}
+
+//Que pasa si se crea el user con una sin contraseña
+{
+    "name": "viviana",
+    "email": "viviana@example.com",
+    "age": 40
+}
+Postman regresara 
+{
+    "message": [
+        "La contraseña debe tener una longitud de minimo 6 caracteres y maximo 10",
+        "password should not be empty"
+    ],
+    "error": "Bad Request",
+    "statusCode": 400
+}
+
+//Que pasa si se crea el user sin una edad
+{
+    "name": "viviana",
+    "email": "viviana@example.com",
+    "password": "12345678"
+}
+Postman regresara 
+{
+    "message": [
+        "La edad debe ser menor a 100",
+        "La edad debe ser mayor o igual a 18",
+        "La edad debe ser un número entero",
+        "La edad es obligatoria"
+    ],
+    "error": "Bad Request",
+    "statusCode": 400
+}
+
+
+//  Iniciar sesión con POST http://localhost:3000/auth/login
+{
+  "email": "pepita@example.com",
+  "password": "password00"
+}
+Postman regresara 
+{
+    "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjgsIm5hbWUiOiJwZXBpdGEiLCJlbWFpbCI6InBlcGl0YUBleGFtcGxlLmNvbSIsImlhdCI6MTc2MDM0MDgzNSwiZXhwIjoxNzYwMzQ0NDM1fQ.A4LBG0GS91zYfN_tAmFZNjeEvpEScJSSUHgV91nZInw"
+}
+
+//// otros casos al ingresar parametros mal
+
+//Que pasa si se pone el email incorrecto
+{
+  "email": "pepi@example.com",
+  "password": "password00"
+}
+Postman regresara 
+{
+    "message": "Credenciales invalidas - EMAIL",
+    "error": "Unauthorized",
+    "statusCode": 401
+}
+
+//Que pasa si se pone el password incorrecto litras de mnas
+{
+  "email": "pepita@example.com",
+  "password": "password1212"
+}
+Postman regresara 
+{
+    "message": [
+        "La contraseña debe tener una longitud de minimo 6 caracteres y maximo 10"
+    ],
+    "error": "Bad Request",
+    "statusCode": 400
+}
+
+//Que pasa si se pone el password incorrecto 
+{
+  "email": "pepita@example.com",
+  "password": "password12"
+}
+Postman regresara 
+{
+    "message": "Credenciales invalidas - PASSWORD",
+    "error": "Unauthorized",
+    "statusCode": 401
+}
+
+//  Ver el perfil Con GET http://localhost:3000/auth/profile
+Postman regresara 
+{
+    "userId": 8,
+    "email": "pepita@example.com"
+}
+
+//  Ver users guardados Con GET http://localhost:3000/users
+Postman regresara todos los usuarios creados 
+[
+    {
+        "id": 1,
+        "name": "Alice",
+        "email": "alice@example.com",
+        "password": "password123",
+        "age": 30
+    },
+    {
+        "id": 2,
+        "name": "Bob",
+        "email": "bob@example.com",
+        "password": "password123",
+        "age": 25
+    },
+    {
+        "id": 5,
+        "name": "Juan Pérez",
+        "email": "juan@example.com",
+        "password": "$2b$10$5.F9VJr913yIwEs/4J/uRu8pH7nflXmoLahLKOTDpaVLxAVtBTbM6",
+        "age": 25
+    },
+    {
+        "id": 6,
+        "name": "maria",
+        "email": "maria@example.com",
+        "password": "password32",
+        "age": null
+    },
+    {
+        "id": 7,
+        "name": "mario",
+        "email": "mario@example.com",
+        "password": "password89",
+        "age": 30
+    },
+    {
+        "id": 8,
+        "name": "pepita",
+        "email": "pepita@example.com",
+        "password": "$2b$10$vbzN6S15BkuzdF.8YVK1Ju.iZvdMCT7zxjRt6HrG9OO.xYtnR5/Ii",
+        "age": 25
+    }
+]
+
+///  que pasa si coloco un id de users que no existe
+GET http://localhost:3000/users/14
+Postman regresara
+{
+    "message": "Usuario no encontrado",
+    "error": "Not Found",
+    "statusCode": 404
+}
+
+//  Crear users Con POST http://localhost:3000/users (también se pueden crear users pero este no tendrán cifrado)
+{
+    "name": "alexa",
+    "email": "alexa@example.com",
+    "password": "1234567",
+    "age": 20
+}
+Postman regresara
+{
+    "id": 9,
+    "name": "alexa",
+    "email": "alexa@example.com",
+    "password": "1234567",
+    "age": 20
+}
+
+//  Actualizar un usuario Con PUT http://localhost:3000/users/(id del users)
+http://localhost:3000/users/9
+{
+    "name": "alexa",
+    "email": "alexa123@example.com",
+    "password": "1234567",
+    "age": 40
+}
+Postman regresara
+{
+    "id": 9,
+    "name": "alexa",
+    "email": "alexa123@example.com",
+    "password": "1234567",
+    "age": 40
+}
+
+//  Eliminar un users Con DELETE http://localhost:3000/users/(id del users)
+DELETE http://localhost:3000/users/9
+Postman regresara
+{
+    "message": "El usuario con id 9 fue eliminado correctamente"
+}
+
+//  que pasa si se intenta eliminar un user que no existe 
+DELETE http://localhost:3000/users/14
+Postman regresara
+{
+    "message": "Usuario con id 14 no encontrado",
+    "error": "Not Found",
+    "statusCode": 404
+}
+
+//  Modulo de product
+al modulo de product se puede acceder a mirar los productos sin iniciar sesion 
+ya que es "publico"
+GET http://localhost:3000/products
+Postman regresara
+[
+    {
+        "id": 2,
+        "nombre": "Silla de oficina",
+        "descripcion": "Silla ",
+        "precio": "199.99",
+        "estado": true,
+        "categoria": "Muebles",
+        "stock": 10
+    },
+    {
+        "id": 4,
+        "nombre": "Teclado Gamer",
+        "descripcion": "RGB y mecánico",
+        "precio": "49.99",
+        "estado": true,
+        "categoria": "Electrónico",
+        "stock": 15
+    },
+    {
+        "id": 7,
+        "nombre": " laptop Aser",
+        "descripcion": "laptop ",
+        "precio": "500.99",
+        "estado": true,
+        "categoria": "Eletronico",
+        "stock": 40
+    }
+]
+
+//  Tambien se pueden visualisar con GET http://localhost:3000/products/(id del producto)
+GET http://localhost:3000/products/2
+Postman regresara
+{
+    "id": 2,
+    "nombre": "Silla de oficina",
+    "descripcion": "Silla ",
+    "precio": "199.99",
+    "estado": true,
+    "categoria": "Muebles",
+    "stock": 10
+}
+
+//  ahora si se intenta añadir un nuevo producto sin estar con el inicio de sesion 
+no te permite subir el producto
+{
+  "nombre": "Laptop Lenovo",
+  "descripcion": "Laptop gamer 16GB RAM",
+  "precio": 3500.99,
+  "categoria": "Electrónicos",
+  "stock": 20
+}
+Postman regresara
+{
+    "message": "Unauthorized",
+    "statusCode": 401
+}
+
+// si se quiere actualizar un producto sin estar con el inicio de sesion 
+{
+    "nombre": "Silla de oficina",
+    "descripcion": "Silla ",
+    "precio": "399.99",
+    "estado": true,
+    "categoria": "Muebles",
+    "stock": 40
+}
+Postman regresara
+{
+    "message": "Unauthorized",
+    "statusCode": 401
+}
+
+// si se quiere "borra" un producto sin estar con el inicio de sesion 
+DELETE http://localhost:3000/products/2
+Postman regresara
+{
+    "message": "Unauthorized",
+    "statusCode": 401
+}
+
+//Ahora con la sesion iniciada 
+//crear un producto POST http://localhost:3000/products
+{
+  "nombre": "Laptop Lenovo",
+  "descripcion": "Laptop gamer 16GB RAM",
+  "precio": 3500.99,
+  "categoria": "Electrónicos",
+  "stock": 20
+}
+Postman regresara
+{
+    "id": 8,
+    "nombre": "Laptop Lenovo",
+    "descripcion": "Laptop gamer 16GB RAM",
+    "precio": 3500.99,
+    "estado": true,
+    "categoria": "Electrónicos",
+    "stock": 20
+}
+
+//actualizar un producto PUT http://localhost:3000/products/(id del producto)
+PUT http://localhost:3000/products/8
+{
+  "nombre": "Laptop Lenovo",
+  "descripcion": "Laptop gamer 16GB RAM",
+  "precio": 35000.99,
+  "categoria": "Electrónicos",
+  "stock": 10
+}
+Postman regresara
+{
+    "id": 8,
+    "nombre": "Laptop Lenovo",
+    "descripcion": "Laptop gamer 16GB RAM",
+    "precio": "35000.99",
+    "estado": true,
+    "categoria": "Electrónicos",
+    "stock": 10
+}
+
+//desactivar un producto DELETE http://localhost:3000/products/(id del producto)
+DELETE http://localhost:3000/products/8
+Postman regresara
+{
+    "message": "Producto 8 desactivado correctamente",
+    "product": {
+        "id": 8,
+        "nombre": "Laptop Lenovo",
+        "descripcion": "Laptop gamer 16GB RAM",
+        "precio": "35000.99",
+        "estado": false,
+        "categoria": "Electrónicos",
+        "stock": 10
+    }
+}
+
+// que pasa si se intenta desactivar un producto ya esta desactivado 
+DELETE http://localhost:3000/products/2
+{
+    "message": "El producto con id 2 ya está desactivado",
+    "error": "Not Found",
+    "statusCode": 404
+}
+
+// que pasa si se intenta desactivar un producto que no exista
+DELETE http://localhost:3000/products/15
+Postman regresara
+{
+    "message": "Producto no encontrado",
+    "error": "Not Found",
+    "statusCode": 404
+}
