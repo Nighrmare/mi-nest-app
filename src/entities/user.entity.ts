@@ -6,6 +6,14 @@
 // Column, define las demas columnas de la tabla
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
+export type Roles = 'admin' | 'users'
+
+
+export enum RolesEnum {
+    ADMIN = 'admin',
+    USER = 'user'
+}
+
 // Definimos la entidad "User", que se convertira en una tabla en la base de datos
 @Entity()
 export class User {
@@ -29,4 +37,8 @@ export class User {
 // La edad del usuario
   @Column({ type: 'int', nullable: false })
   age: number;
+
+  @Column({ default: RolesEnum.USER })
+    role: Roles;
+
 }

@@ -21,6 +21,11 @@ import { Product } from '../../entities/product.entity';
 // Se importa el pipe personalizado para transformar y validar parametros
 import { ParseUpperTrimPipe } from 'src/common/pipes/parse-uppertrim.pipe';
 
+import { Roles } from '../auth/roles.decorator';
+import { RolesEnum } from 'src/entities/user.entity';
+import { RolesGuard } from '../auth/roles.guard';
+
+
 // Se define el controlador de productos con la ruta base /products
 @Controller('products')
 export class ProductsController {
@@ -30,47 +35,46 @@ export class ProductsController {
 
 //  GET /products para ver todos los productos que estan en estado true
   @Get()
-  findAll() {
-    return this.productsService.findAll();
+    findAll() {
+      return this.productsService.findAll();
   }
 
 //  GET /products/(id) para ver un producto por su id
   @Get(':id')
-  findOne(@Param('id',ParseIntPipe) id: number) {
-    return this.productsService.findOne(id);
+  @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(RolesEnum.ADMIN, RolesEnum.USER)
+    findOne(@Param('id',ParseIntPipe) id: number) {
+      return this.productsService.findOne(id);
   }
 
 // GET /products/by-name/(name) para ver un producto por su nombre
   @Get('by-name/:name')
-  findByName(@Param('name', ParseUpperTrimPipe) name: string) {
-    return this.productsService.findByName(name);
+    findByName(@Param('name', ParseUpperTrimPipe) name: string) {
+      return this.productsService.findByName(name);
   }
 
 //  POST /products para crear un nuevo producto
-  @UseGuards(JwtAuthGuard)
-
-// Esta ruta esta protegida con JwtAuthGuard solo usuarios autenticados pueden acceder
   @Post()
-  create(@Body() body: CreateProductDTO) {
-    return this.productsService.create(body);
+  @UseGuards(JwtAuthGuard, RolesGuard)  
+    @Roles(RolesEnum.ADMIN)
+    create(@Body() body: CreateProductDTO) {
+      return this.productsService.create(body);
   }
 
 // PUT /products/(id) para actualizar un producto por su id
-  @UseGuards(JwtAuthGuard)
-
-// Esta ruta esta protegida con JwtAuthGuard solo usuarios autenticados pueden acceder
   @Put(':id')
-  update(@Param('id', ParseIntPipe) id: number, @Body() body: UpdateProductDTO) {
-    return this.productsService.update(id, body);
+  @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(RolesEnum.ADMIN)
+    update(@Param('id', ParseIntPipe) id: number, @Body() body: UpdateProductDTO) {
+      return this.productsService.update(id, body);
   }
 
 // DELETE /products/(id) para desactivar un producto por su id
 // Cambia el estado a false sin eliminar el registro
-  @UseGuards(JwtAuthGuard)
-
-// Esta ruta esta protegida con JwtAuthGuard solo usuarios autenticados pueden acceder
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
-    return this.productsService.disabled(id);
+  @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(RolesEnum.ADMIN)
+    remove(@Param('id', ParseIntPipe) id: number) {
+      return this.productsService.disabled(id);
   }
 }
